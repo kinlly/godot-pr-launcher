@@ -37,6 +37,13 @@ godot-pr-launcher/
     ├── tauri.conf.json          ✅ Tauri configuration
     ├── build.rs                 ✅ Build script
     ├── .gitignore               ✅ Rust/Tauri ignores
+    ├── icons/                   ✅ Application icons
+    │   ├── 32x32.png           ✅ Small icon
+    │   ├── 128x128.png         ✅ Medium icon
+    │   ├── 128x128@2x.png      ✅ Retina icon (256px)
+    │   ├── icon.ico            ✅ Windows icon
+    │   ├── icon.icns           ✅ macOS icon
+    │   └── icon.png            ✅ Base icon (512px)
     └── src/
         ├── main.rs              ✅ Main Tauri app
         ├── github.rs            ✅ GitHub API integration
