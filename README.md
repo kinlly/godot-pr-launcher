@@ -6,8 +6,22 @@ Desktop application to manage GitHub Pull Requests and launch Godot projects.
 
 - ✅ View all open PRs from `kinlly/ylbtm`
 - ✅ Click a PR to launch Godot with the project
+- ✅ **GitHub token support** for private repositories
 - ✅ Beautiful, modern UI with Tauri + React
 - ✅ Lightweight (~5MB exe)
+
+## 🔐 Private Repository Access
+
+**NEW:** The app now supports GitHub Personal Access Tokens for private repositories!
+
+**Quick Setup:**
+1. Create a token at https://github.com/settings/tokens (needs `repo` scope)
+2. Use one of three methods:
+   - **Environment variable:** `set GITHUB_TOKEN=your_token` (Windows) or `export GITHUB_TOKEN=your_token` (Linux/Mac)
+   - **Config file:** Create `.github-token` file next to the .exe with your token
+   - **Batch launcher:** Edit and run `launch-with-token.bat` (Windows)
+
+📖 **See [GITHUB_TOKEN_SETUP.md](GITHUB_TOKEN_SETUP.md) for detailed instructions**
 
 ## 🛠️ Tech Stack
 
@@ -25,6 +39,7 @@ Desktop application to manage GitHub Pull Requests and launch Godot projects.
 - [Microsoft C++ Build Tools](https://visualstudio.microsoft.com/visual-cpp-build-tools/)
 - Godot installed at `C:\repos\godot.exe`
 - Project cloned at `C:\repos\ylbtm`
+- **(Optional)** GitHub Personal Access Token for private repos
 
 **Linux (for development):**
 - Node.js 18+

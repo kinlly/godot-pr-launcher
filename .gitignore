@@ -25,3 +25,10 @@ dist-ssr
 
 # Tauri
 src-tauri/target
+
+# GitHub tokens and secrets
+.github-token
+*.token
+secrets/
+.env.local
+.env.*.local

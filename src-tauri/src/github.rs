@@ -1,5 +1,8 @@
 use reqwest;
 use serde::Deserialize;
+use std::env;
+use std::fs;
+use std::path::PathBuf;
 
 #[derive(Debug, Deserialize)]
 pub struct GithubPR {
@@ -22,16 +25,60 @@ struct GithubError {
     documentation_url: String,
 }
 
+/// Get GitHub token from multiple sources (in order of priority):
+/// 1. GITHUB_TOKEN environment variable
+/// 2. .github-token file in the executable directory
+/// 3. .github-token file in the user's home directory
+fn get_github_token() -> Option<String> {
+    // Try environment variable first
+    if let Ok(token) = env::var("GITHUB_TOKEN") {
+        if !token.trim().is_empty() {
+            return Some(token.trim().to_string());
+        }
+    }
+    
+    // Try .github-token in executable directory
+    if let Ok(exe_path) = env::current_exe() {
+        if let Some(exe_dir) = exe_path.parent() {
+            let token_file = exe_dir.join(".github-token");
+            if let Ok(token) = fs::read_to_string(&token_file) {
+                let token = token.trim().to_string();
+                if !token.is_empty() {
+                    return Some(token);
+                }
+            }
+        }
+    }
+    
+    // Try .github-token in home directory
+    if let Some(home_dir) = dirs_next::home_dir() {
+        let token_file = home_dir.join(".github-token");
+        if let Ok(token) = fs::read_to_string(&token_file) {
+            let token = token.trim().to_string();
+            if !token.is_empty() {
+                return Some(token);
+            }
+        }
+    }
+    
+    None
+}
+
 pub async fn fetch_prs(owner: &str, repo: &str) -> Result<Vec<super::PullRequest>, Box<dyn std::error::Error>> {
     let url = format!("https://api.github.com/repos/{}/{}/pulls?state=open&sort=updated&direction=desc", owner, repo);
     
     let client = reqwest::Client::new();
-    let response = client
+    let mut request = client
         .get(&url)
         .header("User-Agent", "godot-pr-launcher")
-        .header("Accept", "application/vnd.github.v3+json")
-        .send()
-        .await?;
+        .header("Accept", "application/vnd.github.v3+json");
+    
+    // Add authorization header if token is available
+    if let Some(token) = get_github_token() {
+        request = request.header("Authorization", format!("token {}", token));
+    }
+    
+    let response = request.send().await?;
     
     let status = response.status();
     
