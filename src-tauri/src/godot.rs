@@ -1,5 +1,4 @@
 use std::process::Command;
-use std::path::Path;
 
 pub fn launch(pr_number: u32) -> Result<String, String> {
     let repo_path = "c:\\repos\\ylbtm";
@@ -89,6 +88,21 @@ pub fn launch_main() -> Result<String, String> {
     
     println!("✓ Checked out main branch");
     
+    // Pull the latest changes for main branch (this also fetches)
+    println!("Pulling latest changes for main");
+    let pull_result = Command::new("git")
+        .current_dir(repo_path)
+        .args(&["pull", "origin", "main"])
+        .output()
+        .map_err(|e| format!("Failed to pull main: {}", e))?;
+    
+    if !pull_result.status.success() {
+        let stderr = String::from_utf8_lossy(&pull_result.stderr);
+        return Err(format!("Git pull failed: {}", stderr));
+    }
+    
+    println!("✓ Pulled latest changes for main");
+    
     // Now launch Godot with main branch checked out
     let output = Command::new("C:\\repos\\godot.exe")
         .args(&["--path", repo_path])
@@ -97,5 +111,5 @@ pub fn launch_main() -> Result<String, String> {
     
     println!("✓ Launched Godot with main branch (PID: {:?})", output.id());
     
-    Ok("Checked out and launched main branch".to_string())
+    Ok("Checked out and launched main branch with latest changes".to_string())
 }
