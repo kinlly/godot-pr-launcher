@@ -7,7 +7,31 @@ pub fn launch(pr_number: u32) -> Result<String, String> {
     // First, checkout the PR branch
     println!("Fetching and checking out PR #{}", pr_number);
     
-    // Fetch the PR ref
+    // First checkout main to avoid issues with deleting the current branch
+    let checkout_main = Command::new("git")
+        .current_dir(repo_path)
+        .args(&["checkout", "main"])
+        .output()
+        .map_err(|e| format!("Failed to checkout main: {}. Make sure git is installed and the repo path is correct.", e))?;
+    
+    if !checkout_main.status.success() {
+        let stderr = String::from_utf8_lossy(&checkout_main.stderr);
+        return Err(format!("Git checkout main failed: {}", stderr));
+    }
+    
+    // Delete the local PR branch if it exists (to get the latest version)
+    let delete_result = Command::new("git")
+        .current_dir(repo_path)
+        .args(&["branch", "-D", &format!("pr-{}", pr_number)])
+        .output()
+        .map_err(|e| format!("Failed to delete old PR branch: {}", e))?;
+    
+    // It's OK if the branch doesn't exist (first time checking out this PR)
+    if delete_result.status.success() {
+        println!("✓ Deleted old pr-{} branch", pr_number);
+    }
+    
+    // Fetch the PR ref and create a new branch
     let fetch_result = Command::new("git")
         .current_dir(repo_path)
         .args(&["fetch", "origin", &format!("pull/{}/head:pr-{}", pr_number, pr_number)])
