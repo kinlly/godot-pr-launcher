@@ -25,6 +25,7 @@ dist-ssr
 
 # Tauri
 src-tauri/target
+*.rlib
 
 # GitHub tokens and secrets
 .github-token
