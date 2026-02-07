@@ -12,6 +12,7 @@ struct PullRequest {
     html_url: String,
     updated_at: String,
     user: String,
+    head_ref: String,
 }
 
 #[tauri::command]
@@ -22,8 +23,8 @@ async fn get_pull_requests() -> Result<Vec<PullRequest>, String> {
 }
 
 #[tauri::command]
-fn launch_godot(pr_number: u32) -> Result<String, String> {
-    godot::launch(pr_number)
+fn launch_godot(pr_number: u32, branch_name: String) -> Result<String, String> {
+    godot::launch(pr_number, &branch_name)
 }
 
 #[tauri::command]

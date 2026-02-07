@@ -26,13 +26,13 @@ function App() {
     }
   }
 
-  async function handlePRClick(prNumber) {
+  async function handlePRClick(prNumber, branchName) {
     try {
       // Show a loading indicator or success message
-      const result = await invoke('launch_godot', { prNumber });
+      const result = await invoke('launch_godot', { prNumber, branchName });
       console.log(result);
       // Show success notification
-      alert(`✓ ${result}\n\nGodot is now running with PR #${prNumber} checked out.`);
+      alert(`✓ ${result}\n\nGodot is now running with PR #${prNumber} (branch: ${branchName}).`);
     } catch (err) {
       console.error('Error launching Godot:', err);
       alert(`❌ Error: ${err}`);

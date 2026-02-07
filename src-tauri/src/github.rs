@@ -11,11 +11,18 @@ pub struct GithubPR {
     pub html_url: String,
     pub updated_at: String,
     pub user: GithubUser,
+    pub head: GithubHead,
 }
 
 #[derive(Debug, Deserialize)]
 pub struct GithubUser {
     pub login: String,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct GithubHead {
+    #[serde(rename = "ref")]
+    pub ref_name: String,
 }
 
 #[derive(Debug, Deserialize)]
@@ -186,6 +193,7 @@ pub async fn fetch_prs(owner: &str, repo: &str) -> Result<Vec<super::PullRequest
         html_url: pr.html_url,
         updated_at: pr.updated_at,
         user: pr.user.login,
+        head_ref: pr.head.ref_name,
     }).collect();
     
     Ok(prs)
