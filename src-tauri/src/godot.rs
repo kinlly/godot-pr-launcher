@@ -88,22 +88,7 @@ pub fn launch_main() -> Result<String, String> {
     
     println!("✓ Checked out main branch");
     
-    // Fetch the latest changes from remote
-    println!("Fetching latest changes from origin");
-    let fetch_result = Command::new("git")
-        .current_dir(repo_path)
-        .args(&["fetch", "origin"])
-        .output()
-        .map_err(|e| format!("Failed to fetch from origin: {}", e))?;
-    
-    if !fetch_result.status.success() {
-        let stderr = String::from_utf8_lossy(&fetch_result.stderr);
-        return Err(format!("Git fetch failed: {}", stderr));
-    }
-    
-    println!("✓ Fetched latest changes");
-    
-    // Pull the latest changes for main branch
+    // Pull the latest changes for main branch (this also fetches)
     println!("Pulling latest changes for main");
     let pull_result = Command::new("git")
         .current_dir(repo_path)
