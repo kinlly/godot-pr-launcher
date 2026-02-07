@@ -19,25 +19,41 @@ Desktop application to manage GitHub Pull Requests and launch Godot projects.
 
 ### Prerequisites
 
+**Windows:**
 - Node.js 18+
-- Rust 1.70+
+- Rust 1.70+ (install via [rustup](https://rustup.rs/))
+- [Microsoft C++ Build Tools](https://visualstudio.microsoft.com/visual-cpp-build-tools/)
 - Godot installed at `C:\repos\godot.exe`
 - Project cloned at `C:\repos\ylbtm`
+
+**Linux (for development):**
+- Node.js 18+
+- Rust 1.70+
+- System dependencies:
+  ```bash
+  sudo apt-get update
+  sudo apt-get install -y libwebkit2gtk-4.1-dev build-essential curl wget libssl-dev libgtk-3-dev libayatana-appindicator3-dev librsvg2-dev
+  ```
 
 ### Setup
 
 ```bash
-# Install dependencies
+# Install JavaScript dependencies
 npm install
 
-# Run in development mode
+# Run in development mode (requires Godot at C:\repos\godot.exe)
 npm run tauri dev
 
-# Build for production
+# Build for production (Windows)
 npm run tauri build
 ```
 
 The built executable will be in `src-tauri/target/release/`
+
+### Notes
+
+- The application is designed primarily for **Windows** with hardcoded paths to Godot.
+- On Linux, you can develop the UI but the Godot launcher will need path adjustments.
 
 ## 🎯 Usage
 
