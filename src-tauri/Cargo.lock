@@ -1075,6 +1075,7 @@ dependencies = [
 name = "godot-pr-launcher"
 version = "0.1.0"
 dependencies = [
+ "dirs-next",
  "reqwest",
  "serde",
  "serde_json",
