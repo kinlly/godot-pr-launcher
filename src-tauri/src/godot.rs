@@ -45,3 +45,33 @@ pub fn launch(pr_number: u32) -> Result<String, String> {
     
     Ok(format!("Checked out and launched PR #{}", pr_number))
 }
+
+pub fn launch_main() -> Result<String, String> {
+    let repo_path = "c:\\repos\\ylbtm";
+    
+    println!("Checking out main branch");
+    
+    // Checkout main branch
+    let checkout_result = Command::new("git")
+        .current_dir(repo_path)
+        .args(&["checkout", "main"])
+        .output()
+        .map_err(|e| format!("Failed to checkout main: {}. Make sure git is installed and the repo path is correct.", e))?;
+    
+    if !checkout_result.status.success() {
+        let stderr = String::from_utf8_lossy(&checkout_result.stderr);
+        return Err(format!("Git checkout failed: {}", stderr));
+    }
+    
+    println!("✓ Checked out main branch");
+    
+    // Now launch Godot with main branch checked out
+    let output = Command::new("C:\\repos\\godot.exe")
+        .args(&["--path", repo_path])
+        .spawn()
+        .map_err(|e| format!("Failed to launch Godot: {}. Make sure Godot is installed at C:\\repos\\godot.exe", e))?;
+    
+    println!("✓ Launched Godot with main branch (PID: {:?})", output.id());
+    
+    Ok("Checked out and launched main branch".to_string())
+}

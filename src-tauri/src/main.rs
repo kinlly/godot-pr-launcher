@@ -26,11 +26,17 @@ fn launch_godot(pr_number: u32) -> Result<String, String> {
     godot::launch(pr_number)
 }
 
+#[tauri::command]
+fn launch_main() -> Result<String, String> {
+    godot::launch_main()
+}
+
 fn main() {
     tauri::Builder::default()
         .invoke_handler(tauri::generate_handler![
             get_pull_requests,
-            launch_godot
+            launch_godot,
+            launch_main
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

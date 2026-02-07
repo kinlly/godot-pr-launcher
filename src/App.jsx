@@ -39,6 +39,18 @@ function App() {
     }
   }
 
+  async function handleMainClick() {
+    try {
+      const result = await invoke('launch_main');
+      console.log(result);
+      // Show success notification
+      alert(`✓ ${result}\n\nGodot is now running with the main branch.`);
+    } catch (err) {
+      console.error('Error launching main:', err);
+      alert(`❌ Error: ${err}`);
+    }
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white">
       {/* Header */}
@@ -74,7 +86,7 @@ function App() {
         )}
 
         {!loading && !error && (
-          <PRList prs={prs} onPRClick={handlePRClick} />
+          <PRList prs={prs} onPRClick={handlePRClick} onMainClick={handleMainClick} />
         )}
       </main>
     </div>
